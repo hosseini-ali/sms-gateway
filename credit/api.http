@@ -1,0 +1,10 @@
+POST http://localhost:8081/credit
+Content-Type: application/json
+
+{
+  "org_id": "org1",
+  "amount": 100,
+  "txn_id": "xyz"
+}
+
+###

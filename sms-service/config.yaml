@@ -1,0 +1,23 @@
+server:
+  port: 8000
+  mode: "debug"
+
+ClickHouse:
+  host: "0.0.0.0"
+  port: 9000
+  user: "default"
+  password: "default"
+  name: "default"
+
+RabbitMQ:
+  url: "amqp://guest:guest@localhost:5672/"
+  queues:
+    - express
+    - normal
+
+CreditSrv:
+  baseUrl: "http://0.0.0.0:8081"
+
+Price:
+  normal: 1
+  express: 2
