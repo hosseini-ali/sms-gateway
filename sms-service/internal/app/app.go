@@ -16,7 +16,6 @@ import (
 )
 
 type application struct {
-	Ctx        context.Context
 	cancelFunc context.CancelFunc
 	Db         *clickhouse.Conn
 	Rabbit     *amqp091.Connection
@@ -104,21 +103,20 @@ func WithCreditSrv(ctx context.Context) {
 }
 
 // WithGracefulShutdown registers a signal handler for graceful shutdown
-func WithGracefulShutdown() {
-	c := make(chan os.Signal, 2)
-	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
-
-	A.Ctx, A.cancelFunc = context.WithCancel(context.Background())
+func WithGracefulShutdown() context.Context {
+	ctx, cancel := context.WithCancel(context.Background())
 
 	go func() {
+		c := make(chan os.Signal, 1)
+		signal.Notify(c, os.Interrupt, syscall.SIGTERM)
 		sig := <-c
-
-		log.Println("system call", sig)
-		A.cancelFunc()
+		log.Println("system call:", sig)
+		cancel()
 	}()
+
+	return ctx
 }
 
-func Wait() {
-	defer A.cancelFunc()
-	<-A.Ctx.Done()
+func Wait(ctx context.Context) {
+	<-ctx.Done()
 }

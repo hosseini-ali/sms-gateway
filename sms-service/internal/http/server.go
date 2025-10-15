@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"notif/config"
-	"notif/internal/app"
 
 	"github.com/labstack/echo/v4"
 )
@@ -23,7 +22,7 @@ func NewServer() *server {
 	}
 }
 
-func (s *server) Serve() {
+func (s *server) Serve(ctx context.Context) {
 	cnf := config.C
 
 	go func() {
@@ -34,7 +33,10 @@ func (s *server) Serve() {
 	}()
 
 	go func() {
-		<-app.A.Ctx.Done()
+		<-ctx.Done()
+		s.e.Logger.Info("Shutdown signal received")
+
+		// Create timeout for graceful shutdown
 		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 		defer cancel()
 		if err := s.e.Shutdown(ctx); err != nil {

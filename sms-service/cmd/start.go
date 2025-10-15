@@ -15,19 +15,19 @@ var startCmd = &cobra.Command{
 }
 
 func startFunc(cmd *cobra.Command, _ []string) {
-	app.WithGracefulShutdown()
+	ctx := app.WithGracefulShutdown()
 
-	app.WithClickHouse(cmd.Context())
+	app.WithClickHouse(ctx)
 
-	app.WithRabbitMQ(cmd.Context())
+	app.WithRabbitMQ(ctx)
 
-	app.WithPublisher(cmd.Context())
+	app.WithPublisher(ctx)
 
-	app.WithCreditSrv(cmd.Context())
+	app.WithCreditSrv(ctx)
 
 	internal_http.
 		NewServer().
-		Serve()
+		Serve(ctx)
 
-	app.Wait()
+	app.Wait(ctx)
 }
