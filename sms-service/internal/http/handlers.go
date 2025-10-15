@@ -2,10 +2,12 @@ package http
 
 import (
 	"fmt"
+	"net/http"
 
 	"notif/config"
 	"notif/internal/app"
 	"notif/internal/models"
+	"notif/internal/repo"
 
 	"github.com/labstack/echo/v4"
 )
@@ -56,3 +58,24 @@ func SendSMS(c echo.Context) error {
 
 	return echo.NewHTTPError(200, "Ok")
 }
+
+// GetOrgCount handles GET /orgs/:org/count and returns the number of records for the org
+func GetOrgCount(c echo.Context) error {
+	org := c.Param("org")
+	if org == "" {
+		return echo.NewHTTPError(http.StatusBadRequest, "org is required")
+	}
+
+	storage := repo.NewSMSStorage(*app.A.Db)
+	count, err := storage.CountByOrg(c.Request().Context(), org)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, fmt.Sprintf("failed to get count: %v", err))
+	}
+
+	return c.JSON(http.StatusOK, map[string]any{
+		"org":   org,
+		"count": count,
+	})
+}
+
+// server.go

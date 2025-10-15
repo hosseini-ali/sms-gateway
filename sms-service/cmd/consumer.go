@@ -102,7 +102,7 @@ var consumeCmd = &cobra.Command{
 						log.Printf("[worker-%d] Received message", id)
 
 						err := RabbitHandler(string(msg.Body))
-						if err != nil {
+						if err != nil { // we could have an exponential back-off retry policy.
 							log.Printf("[worker-%d] failed to handle: %v", id, err)
 						}
 
@@ -121,7 +121,7 @@ var consumeCmd = &cobra.Command{
 		<-ctx.Done()
 
 		log.Println("[graceful-shutdown] Waiting for cleanup...")
-		time.Sleep(2 * time.Second) // optional small delay
+		time.Sleep(2 * time.Second) // small delay for all workers.
 		log.Println("[graceful-shutdown] Consumer exited cleanly.")
 		return nil
 	},

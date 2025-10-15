@@ -45,4 +45,5 @@ func (s *server) Serve(ctx context.Context) {
 	}()
 
 	s.e.POST("/send", SendSMS)
+	s.e.GET("/orgs/:org/count", GetOrgCount)
 }
