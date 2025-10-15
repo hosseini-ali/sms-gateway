@@ -18,6 +18,7 @@ var rootCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(startCmd)
 	rootCmd.AddCommand(migrateCmd)
+	rootCmd.AddCommand(persistCmd)
 }
 
 func preRun(_ *cobra.Command, _ []string) {

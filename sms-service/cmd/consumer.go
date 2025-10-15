@@ -48,8 +48,8 @@ var consumeCmd = &cobra.Command{
 
 		consumerName, _ := cmd.Flags().GetString("consumer")
 		cmd.MarkFlagRequired("consumer")
-
 		workerCount, _ := cmd.Flags().GetInt("workers")
+
 		if consumerName == "" {
 			panic("queue name cannot be empty")
 		}
@@ -101,7 +101,10 @@ var consumeCmd = &cobra.Command{
 						}
 						log.Printf("[worker-%d] Received message", id)
 
-						RabbitHandler(string(msg.Body))
+						err := RabbitHandler(string(msg.Body))
+						if err != nil {
+							log.Printf("[worker-%d] failed to handle: %v", id, err)
+						}
 
 						if err := msg.Ack(false); err != nil {
 							log.Printf("[worker-%d] failed to ack: %v", id, err)

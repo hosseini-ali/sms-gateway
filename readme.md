@@ -66,3 +66,9 @@ This architecture allows the service to:
 - Dynamically scale per traffic type (express/normal),  
 - Maintain availability even under failure conditions, and  
 - Ensure timely SMS delivery during traffic peaks.
+
+
+---
+
+## Scalable Version
+![System Overview](./v2.png)

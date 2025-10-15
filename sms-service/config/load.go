@@ -2,7 +2,6 @@ package config
 
 import (
 	"fmt"
-	"log"
 
 	"github.com/spf13/viper"
 )
@@ -26,6 +25,5 @@ func LoadConfig(path string) (*Config, error) {
 		return nil, fmt.Errorf("unable to decode config into struct: %w", err)
 	}
 
-	log.Println("✅ Config loaded successfully from:", viper.ConfigFileUsed())
 	return &C, nil
 }
